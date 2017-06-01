@@ -41,12 +41,11 @@ void loop_2Hz(void);
 void loop_1Hz(void);
 //static inline void serial_init(uint8_t uart_number);
 
+Scheduler runner;
 //Tasks
 Task _1Hz(1000, TASK_FOREVER, &loop_1Hz);
-Task _2Hz(500, TASK_FOREVER, &loop_2Hz);
+Task _2Hz(500, TASK_FOREVER, &loop_2Hz,  &runner, true, led_gcs_connection, led_no_gcs_connection);
 Task _50Hz(20, TASK_FOREVER, &loop_50Hz);
-
-Scheduler runner;
 
 /**
  * Main loop timers
@@ -126,7 +125,7 @@ void loop_imm(void)
 						{
 							gcs_connected = 1;
 							_2Hz.enable();
-							led_gcs_connection();
+//							led_gcs_connection();
 							//delay(2000);
 						}
 						timer.gcs_connection = millis();
@@ -235,7 +234,7 @@ void loop_1Hz(void)
 
 	if((millis() - timer.gcs_connection) > 2000)
 	{
-		led_no_gcs_connection();
+//		led_no_gcs_connection();
 		gcs_connected = 0;
 		_2Hz.disable();
 	}
