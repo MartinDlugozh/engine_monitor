@@ -206,9 +206,9 @@
  .././mavlink/ardupilotmega/../common/./mavlink_msg_named_value_int.h \
  .././mavlink/ardupilotmega/../common/./mavlink_msg_statustext.h \
  .././mavlink/ardupilotmega/../common/./mavlink_msg_debug.h \
- .././mavlink/ardupilotmega/../uAvionix/uAvionix.h \
- .././mavlink/ardupilotmega/../uAvionix/../protocol.h \
- .././mavlink/common/mavlink.h ../mavlink_hlp.h ../parameters.h \
+ .././mavlink/common/mavlink.h .././mavlink/protocol.h \
+ .././mavlink/mavlink_helpers.h .././mavlink/checksum.h \
+ .././mavlink/mavlink_types.h ../mavlink_hlp.h ../parameters.h \
  /home/kaktus/sloeber/arduinoPlugin/packages/arduino/hardware/avr/1.6.15/libraries/EEPROM/src/EEPROM.h \
  ../RPM_sensor.h ../Temperature_sensor.h ../engine_monitor_s.ino
 
@@ -632,11 +632,15 @@
 
 .././mavlink/ardupilotmega/../common/./mavlink_msg_debug.h:
 
-.././mavlink/ardupilotmega/../uAvionix/uAvionix.h:
-
-.././mavlink/ardupilotmega/../uAvionix/../protocol.h:
-
 .././mavlink/common/mavlink.h:
+
+.././mavlink/protocol.h:
+
+.././mavlink/mavlink_helpers.h:
+
+.././mavlink/checksum.h:
+
+.././mavlink/mavlink_types.h:
 
 ../mavlink_hlp.h:
 

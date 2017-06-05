@@ -19,9 +19,13 @@
 /**
  * MAVLink headers
  */
-//#include "../libraries/mavlink-c-lib/common/mavlink.h"
-#include "./mavlink/ardupilotmega/mavlink.h"
-#include "./mavlink/common/mavlink.h"
+//#define MAVLINK_CHECK_MESSAGE_LENGTH 1
+#include "./mavlink_avr/ardupilotmega/mavlink.h"
+#include "./mavlink_avr/common/mavlink.h"
+#include "./mavlink_avr/protocol.h"
+#include "./mavlink_avr/mavlink_helpers.h"
+#include "./mavlink_avr/checksum.h"
+#include "./mavlink_avr/mavlink_types.h"
 #include "mavlink_hlp.h"
 
 /**
@@ -39,10 +43,11 @@ void loop_imm(void);
 void loop_50Hz(void);
 void loop_2Hz(void);
 void loop_1Hz(void);
-//static inline void serial_init(uint8_t uart_number);
 
+/**
+ * Scheduler tasks
+ */
 Scheduler runner;
-//Tasks
 Task _1Hz(1000, TASK_FOREVER, &loop_1Hz);
 Task _2Hz(500, TASK_FOREVER, &loop_2Hz,  &runner, true, led_gcs_connection, led_no_gcs_connection);
 Task _50Hz(20, TASK_FOREVER, &loop_50Hz);
@@ -55,10 +60,12 @@ struct {
 	volatile uint32_t gcs_connection;
 }timer = { 0, 0 };
 
+/**
+ * Sensors
+ */
 RPM_sensor				rpm_sensor;								// создаем объекты: датчика оборотов
 Temperature_sensor		temp_sensor;							// датчика температуры двигателя
 void rpm_int() {rpm_sensor.accumulate();}						// ЭТО КОСТЫЛЬ, СУЦККО	(если по-человечески, то ссылка на эту ф-цию должна быть в объявлении обработчика прерывания)
-
 
 void setup()
 {
@@ -68,8 +75,6 @@ void setup()
 	delay(5000);
 
 	param_load_all();
-//	param_save_all();
-//	param_handle_req_list(UART_DEF);
 
 	rpm_sensor.begin();											// если инициализировали датчик, то у него стартанул таймер
 	temp_sensor.begin(THERMISTOR_BALANCE_RES, TEMPERATURE_SENSOR_PIN);
@@ -88,7 +93,6 @@ void setup()
 	runner.addTask(_50Hz);
 
 	_1Hz.enable();
-//	_2Hz.enable();
 	_2Hz.delay(2000);
 	_50Hz.enable();
 }
@@ -125,8 +129,6 @@ void loop_imm(void)
 						{
 							gcs_connected = 1;
 							_2Hz.enable();
-//							led_gcs_connection();
-							//delay(2000);
 						}
 						timer.gcs_connection = millis();
 						break;
@@ -234,7 +236,6 @@ void loop_1Hz(void)
 
 	if((millis() - timer.gcs_connection) > 2000)
 	{
-//		led_no_gcs_connection();
 		gcs_connected = 0;
 		_2Hz.disable();
 	}

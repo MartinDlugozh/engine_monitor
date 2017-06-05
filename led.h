@@ -33,9 +33,10 @@ void led_no_px_connection(void)
 	digitalWrite(LED_RED, HIGH);
 }
 
-void led_gcs_connection(void)
+bool led_gcs_connection(void)
 {
 	digitalWrite(LED_YELLOW, HIGH);
+	return true;
 }
 
 void led_no_gcs_connection(void)

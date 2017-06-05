@@ -2,7 +2,7 @@
 //This is a automatic generated file
 //Please do not modify this file
 //If you touch this file your change will be overwritten during the next build
-//This file has been generated on 2017-06-01 10:21:22
+//This file has been generated on 2017-06-05 15:45:36
 
 #include "Arduino.h"
 #include "Arduino.h"
@@ -12,8 +12,12 @@
 #include "mc_config.h"
 #include "mc_var.h"
 #include "led.h"
-#include "./mavlink/ardupilotmega/mavlink.h"
-#include "./mavlink/common/mavlink.h"
+#include "./mavlink_avr/ardupilotmega/mavlink.h"
+#include "./mavlink_avr/common/mavlink.h"
+#include "./mavlink_avr/protocol.h"
+#include "./mavlink_avr/mavlink_helpers.h"
+#include "./mavlink_avr/checksum.h"
+#include "./mavlink_avr/mavlink_types.h"
 #include "mavlink_hlp.h"
 #include "parameters.h"
 #include "RPM_sensor.h"
