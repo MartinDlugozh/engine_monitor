@@ -43,8 +43,8 @@ void Temperature_sensor::accumulate(void)
 	_temperature = log(_bal_res*((1024.0f / analogRead(_pin)) - 1));
 	//log(10000.0*((1024.0/RawADC-1)));
 	_temperature = 1.0f / (0.001129148f + (0.000234125f + (0.0000000876741f * _temperature * _temperature ))* _temperature );
-	//_temperature = _temperature - 273.15f;
-	//_temperature = (_temperature * 9.0f)/ 5.0f + 32.0f;//+32
+	_temperature = _temperature - 273.15f;
+//	_temperature = (_temperature * 9.0f)/ 5.0f + 32.0f;//+32
 	//_temperature = _temperature + 273.15f;
 	//((1 / (0.001129148 + (0.000234125 * _temperature) + (0.0000000876741 * _temperature * _temperature * _temperature))) - 305.15) / 1.8f;
 #endif

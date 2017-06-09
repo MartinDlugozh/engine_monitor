@@ -72,7 +72,7 @@ void setup()
 	led_init();
 	UART_DEF.begin(BAUD_DEF);
 
-	delay(5000);
+//	delay(5000);
 
 	param_load_all();
 
@@ -81,10 +81,10 @@ void setup()
 
 	attachInterrupt(0, rpm_int, FALLING);			// поэтому не медлим и сразу вешаем ему обработчик прерывания
 
-	if(DBG_TXT_p == 1)
-	{
-		statustext_send("MC is READY", UART_DEF);
-	}
+//	if(DBG_TXT_p == 1)
+//	{
+//		statustext_send("MC is READY", UART_DEF);
+//	}
 	led_no_px_gcs_connection();
 
 	runner.init();
@@ -125,9 +125,9 @@ void loop_imm(void)
 					{
 					case MAVLINK_MSG_ID_HEARTBEAT:
 					{
-						if(gcs_connected == 0)
+						if(connected.gcs == 0)
 						{
-							gcs_connected = 1;
+							connected.gcs = 1;
 							_2Hz.enable();
 						}
 						timer.gcs_connection = millis();
@@ -135,10 +135,10 @@ void loop_imm(void)
 					}
 					case MAVLINK_MSG_ID_PARAM_SET:
 					{
-						if(DBG_TXT_p == 1)
-						{
-							statustext_send("GOT_SOME_PARAM", UART_DEF);
-						}
+//						if(DBG_TXT_p == 1)
+//						{
+//							statustext_send("GOT_SOME_PARAM", UART_DEF);
+//						}
 
 						mavlink_param_set_t param;
 
@@ -149,10 +149,10 @@ void loop_imm(void)
 					case MAVLINK_MSG_ID_PARAM_REQUEST_LIST:
 					{
 						param_handle_req_list(UART_DEF);
-						if(DBG_TXT_p == 1)
-						{
-							statustext_send("GOT_PARAM_LIST_REQ", UART_DEF);
-						}
+//						if(DBG_TXT_p == 1)
+//						{
+//							statustext_send("GOT_PARAM_LIST_REQ", UART_DEF);
+//						}
 						break;
 					}
 					case MAVLINK_MSG_ID_PARAM_REQUEST_READ:
@@ -160,10 +160,10 @@ void loop_imm(void)
 						mavlink_param_request_read_t prq;
 						mavlink_msg_param_request_read_decode(&rd, &prq);
 						param_handle_req_value(prq, UART_DEF);
-						if(DBG_TXT_p == 1)
-						{
-							statustext_send("GOT_PARAM_VAL_REQ", UART_DEF);
-						}
+//						if(DBG_TXT_p == 1)
+//						{
+//							statustext_send("GOT_PARAM_VAL_REQ", UART_DEF);
+//						}
 						break;
 					}
 					default:
@@ -174,9 +174,10 @@ void loop_imm(void)
 					{
 					case MAVLINK_MSG_ID_HEARTBEAT:
 					{
-						if(px_connected == 0)
+						if(connected.px == 0)
 						{
-							px_connected = 1;
+							sys_id_px = rd.sysid;
+							connected.px = 1;
 							led_px_connection();
 						}
 						timer.px_connection = millis();
@@ -221,6 +222,13 @@ void loop_2Hz(void)
 			(uint16_t)0,									// [18]
 			(uint8_t)255);
 	send_message(&ch, UART_DEF);
+
+	if((TELEM_INJECT_p == 1) && (connected.px == 1))
+	{
+		mavlink_message_t en;
+		mavlink_msg_ap_engine_status_pack(sys_id_px, 0, &en, (uint16_t)rpm_sensor.getRPM(), temp_sensor.getTemperature(), 40, 50);
+		send_message(&en, UART_DEF);
+	}
 }
 
 void loop_1Hz(void)
@@ -231,12 +239,12 @@ void loop_1Hz(void)
 	if((millis() - timer.px_connection) > 5000)
 	{
 		led_no_px_connection();
-		px_connected = 0;
+		connected.px = 0;
 	}
 
 	if((millis() - timer.gcs_connection) > 2000)
 	{
-		gcs_connected = 0;
+		connected.gcs = 0;
 		_2Hz.disable();
 	}
 }
