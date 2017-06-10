@@ -1,6 +1,9 @@
 #ifndef MC_CONFIG_H_
 #define MC_CONFIG_H_
 
+#define MAVLINK_COMM_NUM_CHANNELS 	1
+#define MAVLINK_COMM_NUM_BUFFERS 	1
+
 #define UART_0 					Serial					// Номера портов - основной
 #define UART_1 					Serial1					// Номера портов - отладочный
 #define UART_2					Serial2
